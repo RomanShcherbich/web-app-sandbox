@@ -22,7 +22,8 @@
                 <p class="lead">Your hackathon project will be here</p>
                 
                 <div class="mt-4">
-                    <button id="getTimeBtn" class="btn btn-primary">Show Time</button>
+                    <button id="getTimeBtn" class="btn btn-primary me-2">Show Time</button>
+                    <button id="getCurrencyBtn" class="btn btn-success">Show Currency Rates</button>
                 </div>
                 
                 <div class="mt-4">
@@ -45,6 +46,18 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="mt-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Currency Rates</h5>
+                            <div id="currencyInfo">
+                                <p class="mb-2">USD to EUR: <span id="usdToEur" class="fw-bold">--</span></p>
+                                <p class="text-muted small">Last updated: <span id="currencyTimestamp">--</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -60,6 +73,23 @@
                 document.getElementById('portugalTime').textContent = data.portugal;
             } catch (error) {
                 console.error('Error getting time:', error);
+            }
+        });
+
+        document.getElementById('getCurrencyBtn').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/currency');
+                const data = await response.json();
+                
+                if (data.error) {
+                    console.error('Error:', data.error);
+                    return;
+                }
+                
+                document.getElementById('usdToEur').textContent = data.usd_to_eur.toFixed(4);
+                document.getElementById('currencyTimestamp').textContent = new Date(data.timestamp).toLocaleString();
+            } catch (error) {
+                console.error('Error getting currency rates:', error);
             }
         });
     </script>
